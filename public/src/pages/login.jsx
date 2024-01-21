@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
 import styled from "styled-components";
 import Logo from "../assets/logo.png";
 import bgImage from '../assets/bgimage.jpg';

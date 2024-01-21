@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
 import styled from "styled-components";
 import Logo from "../assets/logo.png";
 import bgImage from '../assets/bgimage.jpg';
 import 'react-toastify/dist/ReactToastify.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { registerRoute } from "../utils/APIRoutes";
 
 export default function Register() {
 
@@ -28,7 +30,9 @@ export default function Register() {
     draggable: false,
     progress: undefined,
     theme:"dark",
-  }
+  };
+
+  const navigate = useNavigate();
 
   function isDigit(character) {
     return /^\d$/.test(character);
@@ -68,10 +72,22 @@ export default function Register() {
     return true;
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if(handleValidation()) {
-      toast.success("User Registered", toastOptions);
+      const { username, email, password } = values;
+      const { data } = await axios.post(registerRoute, {
+        username,
+        email, 
+        password,
+      });
+      if(!data.status) {
+        toast.error(data.msg, toastOptions);
+      }
+      if(data.status) {
+        localStorage.setItem("snaptalk-user", JSON.stringify(data.user));
+        navigate("/snaptalk")
+      } 
     }
   }
 
