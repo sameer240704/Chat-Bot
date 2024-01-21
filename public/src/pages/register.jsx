@@ -5,6 +5,8 @@ import styled from "styled-components";
 import Logo from "../assets/logo.png";
 import bgImage from '../assets/bgimage.jpg';
 import 'react-toastify/dist/ReactToastify.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 export default function Register() {
 
@@ -13,7 +15,9 @@ export default function Register() {
     email: "",
     password:"",
     confirmPassword:""
-  })
+  });
+
+  const [ showPassword, setShowPassword ] = useState(false);
 
   const toastOptions = {
     position: "top-right",
@@ -98,16 +102,29 @@ export default function Register() {
               onChange={(event) => {handleChange(event)}}
             />
             <input 
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
+              className="eye-container"
               onChange={(event) => {handleChange(event)}}
             />
+            <FontAwesomeIcon
+              icon={showPassword ? faEyeSlash : faEye}
+              className="icon1"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+    
             <input 
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="confirmPassword"
               placeholder="Confirm Password"
+              className="eye-container"
               onChange={(event) => {handleChange(event)}}
+            />
+             <FontAwesomeIcon
+              icon={showPassword ? faEyeSlash : faEye}
+              className="icon2"
+              onClick={() => setShowPassword(!showPassword)}
             />
             <button type="submit">
               <span className="circle1"></span>
@@ -193,6 +210,22 @@ const FormContainer = styled.div`
     background: #525252;
     color: #fff7f7;
     font-size: 16px;
+  }
+
+  .eye-container {
+    padding: 15px 45px 15px 15px;
+  }
+
+  .icon1 {
+    position: absolute;
+    top: 433px;
+    left: 885px;
+  }
+
+  .icon2 {
+    position: absolute;
+    top: 490px;
+    left: 885px;
   }
 
   button {
