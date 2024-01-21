@@ -10,7 +10,7 @@ export default function App() {
       <Routes>
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/login" element={<Login />} />
-        <Route exact path="/chat-bot" element={<Main />} />
+        <Route exact path="/snaptalk" element={<Main />} />
       </Routes>
     </BrowserRouter>
   )

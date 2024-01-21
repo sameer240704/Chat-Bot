@@ -1,25 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import Logo from "../assets/logo.png";
 import bgImage from '../assets/bgimage.jpg';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Register() {
 
   const [ values, setValues ] = useState({
+    username: "",
     email: "",
     password:"",
     confirmPassword:""
   })
+
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: false,
+    progress: undefined,
+    theme:"dark",
+  }
+
+  function isDigit(character) {
+    return /^\d$/.test(character);
+  }
   
+  const handleValidation = () => {
+    const { username, email, password, confirmPassword } = values;
+
+    if(password !== confirmPassword) {
+      toast.error("Passwords don't match", toastOptions);
+      return false;
+    }
+    else if(username.length < 3) {
+      toast.error("Username is too short", toastOptions);
+      return false;
+    }
+    else if(email === "") {
+      toast.error("Email Required", toastOptions);
+      return false;
+    }
+    else if(password.length < 8) {
+      toast.error("Password should be greater than 8 characters", toastOptions);
+      return false;
+    }
+    else if(password.length >= 8) {
+      let digit = 0;
+      for(let i = 0 ; i < password.length ; i += 1) {
+        if(isDigit(password[i])) {
+          digit += 1;
+        }
+      }
+      if(digit < 3) {
+        toast.error("Password should contain minimum three digits", toastOptions);
+        return false;
+      }
+    }
+    return true;
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert("Form has been submitted")
+    if(handleValidation()) {
+      toast.success("User Registered", toastOptions);
+    }
   }
 
   const handleChange = (event) => {
     event.preventDefault();
-    // alert("Change Event Occured")
+    setValues({ ...values, [event.target.name]: event.target.value });
   }
 
   return (
@@ -56,16 +110,28 @@ export default function Register() {
               onChange={(event) => {handleChange(event)}}
             />
             <button type="submit">
-              <span class="circle1"></span>
-              <span class="circle2"></span>
-              <span class="circle3"></span>
-              <span class="circle4"></span>
-              <span class="circle5"></span>
-              <span class="text">Sign Up</span>
+              <span className="circle1"></span>
+              <span className="circle2"></span>
+              <span className="circle3"></span>
+              <span className="circle4"></span>
+              <span className="circle5"></span>
+              <span className="text">Sign Up</span>
             </button>
-            <span>Already have an account? <Link to="/login">Sign In Now</Link></span>
+            <span>Already have an account? <Link to="/login" className="link">Sign In Now</Link></span>
         </form>
       </FormContainer>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="dark"
+      />
     </>
   )
 }
@@ -162,29 +228,35 @@ const FormContainer = styled.div`
   }
   
   button span:nth-child(1) {
-    transform: translate(-7em, -8em);
+    transform: translate(-7em, -6.3em);
   }
   
   button span:nth-child(2) {
-    transform: translate(-5em, 1.7em);
+    transform: translate(-9em, 2.5em);
   }
   
   button span:nth-child(3) {
-    transform: translate(-.2em, 1.8em);
+    transform: translate(-2em, 3.5em);
   }
   
   button span:nth-child(4) {
-    transform: translate(3.5em, 1.4em);
+    transform: translate(4em, 1.6em);
   }
   
   button span:nth-child(5) {
-    transform: translate(3.5em, -3.8em);
+    transform: translate(3em, -6.7em);
   }
   
   button:hover span:not(:nth-child(6)) {
     transform: translate(-50%, -50%) scale(4);
     transition: 1.5s ease;
   }  
+
+  .link {
+    text-decoration: none;
+    color: #f7f7ff;
+    font-weight: 600;
+  }
 
   @keyframes rotateAnimation {
 	  from { 
