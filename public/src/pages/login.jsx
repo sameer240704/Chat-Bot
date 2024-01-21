@@ -67,7 +67,7 @@ export default function Login() {
         if(isChecked) {
           localStorage.setItem("snaptal-remember", "true");
         }
-        navigate("/snaptalk")
+        navigate("/")
       } 
     }
   };
@@ -82,7 +82,7 @@ export default function Login() {
     const user = localStorage.getItem("snaptalk-user");
 
     if(rememberMe === "true" && user) {
-      navigate("/snaptalk");
+      navigate("/");
     }
   }, [navigate]);
 

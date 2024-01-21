@@ -86,7 +86,7 @@ export default function Register() {
       }
       if(data.status) {
         localStorage.setItem("snaptalk-user", JSON.stringify(data.user));
-        navigate("/snaptalk")
+        navigate("/")
       } 
     }
   }
