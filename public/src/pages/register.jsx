@@ -12,6 +12,8 @@ import { registerRoute } from "../utils/APIRoutes";
 
 export default function Register() {
 
+  const navigate = useNavigate();
+
   const [ values, setValues ] = useState({
     username: "",
     email: "",
@@ -31,8 +33,6 @@ export default function Register() {
     progress: undefined,
     theme:"dark",
   };
-
-  const navigate = useNavigate();
 
   function isDigit(character) {
     return /^\d$/.test(character);
@@ -236,12 +236,14 @@ const FormContainer = styled.div`
     position: absolute;
     top: 433px;
     left: 885px;
+    cursor: pointer;
   }
 
   .icon2 {
     position: absolute;
     top: 490px;
     left: 885px;
+    cursor: pointer;
   }
 
   button {

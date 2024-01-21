@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import styled from "styled-components";
 import Logo from "../assets/logo.png";
 import bgImage from '../assets/bgimage.jpg';
 import 'react-toastify/dist/ReactToastify.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { loginRoute } from "../utils/APIRoutes";
 
-export default function Register() {
+export default function Login() {
+
+  const navigate = useNavigate();
 
   const [ values, setValues ] = useState({
     username: "",
-    email: "",
     password:"",
   });
 
   const [ showPassword, setShowPassword ] = useState(false);
+
+  const [ isChecked, setChecked ] = useState(false);
+
+  const handleCheckboxChange = () => setChecked(!isChecked);
 
   const toastOptions = {
     position: "top-right",
@@ -28,54 +34,57 @@ export default function Register() {
     draggable: false,
     progress: undefined,
     theme:"dark",
-  }
-
-  function isDigit(character) {
-    return /^\d$/.test(character);
-  }
+  };
   
   const handleValidation = () => {
-    const { username, email, password } = values;
+    const { username, password } = values;
 
-    if(username.length < 3) {
-      toast.error("Username is too short", toastOptions);
+    if(username === "") {
+      toast.error("Username Is Required", toastOptions);
       return false;
     }
-    else if(email === "") {
-      toast.error("Email Required", toastOptions);
+    else if(password === "") {
+      toast.error("Password Is Required", toastOptions);
       return false;
-    }
-    else if(password.length < 8) {
-      toast.error("Password should be greater than 8 characters", toastOptions);
-      return false;
-    }
-    else if(password.length >= 8) {
-      let digit = 0;
-      for(let i = 0 ; i < password.length ; i += 1) {
-        if(isDigit(password[i])) {
-          digit += 1;
-        }
-      }
-      if(digit < 3) {
-        toast.error("Password should contain minimum three digits", toastOptions);
-        return false;
-      }
     }
     return true;
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if(handleValidation()) {
-      const { username } = values;
-      toast.success(`Welcome to SnapTalk, ${username}`, toastOptions);
-    }
-  }
+      const { username, password } = values;
+      const { data } = await axios.post(loginRoute, {
+        username,
+        password,
+      });
+      if(!data.status) {
+        toast.error(data.msg, toastOptions);
+      }
+      if(data.status) {
+        localStorage.setItem("snaptalk-user", JSON.stringify(data.user));
 
+        if(isChecked) {
+          localStorage.setItem("snaptal-remember", "true");
+        }
+        navigate("/snaptalk")
+      } 
+    }
+  };
+  
   const handleChange = (event) => {
     event.preventDefault();
     setValues({ ...values, [event.target.name]: event.target.value });
   }
+
+  useEffect(() => {
+    const rememberMe = localStorage.getItem("snaptalk-remember");
+    const user = localStorage.getItem("snaptalk-user");
+
+    if(rememberMe === "true" && user) {
+      navigate("/snaptalk");
+    }
+  }, [navigate]);
 
   return (
     <>
@@ -90,12 +99,7 @@ export default function Register() {
               type="text"
               name="username"
               placeholder="Username"
-              onChange={(event) => {handleChange(event)}}
-            />
-            <input 
-              type="email"
-              name="email"
-              placeholder="Email"
+              min="3"
               onChange={(event) => {handleChange(event)}}
             />
             <input 
@@ -110,6 +114,14 @@ export default function Register() {
               className="icon1"
               onClick={() => setShowPassword(!showPassword)}
             />
+            <label>
+            <input  
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+            />
+            Remember Me?              
+            </label>
             <button type="submit">
               <span className="circle1"></span>
               <span className="circle2"></span>
@@ -161,7 +173,7 @@ const FormContainer = styled.div`
   }
 
   form {
-    height: 550px;
+    height: 500px;
     width: 400px;
     padding: 50px;
     background: rgba(0, 0, 0, 0.4);
@@ -202,8 +214,17 @@ const FormContainer = styled.div`
 
   .icon1 {
     position: absolute;
-    top: 458px;
+    top: 425px;
     left: 885px;
+    cursor: pointer;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 16px;
+    input {
+      margin-right: 3px;
+    }
   }
 
   button {
