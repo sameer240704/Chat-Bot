@@ -152,7 +152,8 @@ export default function Login() {
 const FormContainer = styled.div`
   height: 100vh;
   width: 100vw;
-  background-image: url(${bgImage});
+  background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+                    url(${bgImage});
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
