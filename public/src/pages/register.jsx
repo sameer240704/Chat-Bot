@@ -34,6 +34,12 @@ export default function Register() {
     theme:"dark",
   };
 
+  useEffect(() => {
+    if(localStorage.getItem("snaptalk-user")) {
+      navigate("/");
+    }
+  }, []);
+
   function isDigit(character) {
     return /^\d$/.test(character);
   }
@@ -84,7 +90,7 @@ export default function Register() {
       if(!data.status) {
         toast.error(data.msg, toastOptions);
       }
-      if(data.status) {
+      if(data.status === true) {
         localStorage.setItem("snaptalk-user", JSON.stringify(data.user));
         navigate("/")
       } 

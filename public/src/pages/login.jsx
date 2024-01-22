@@ -35,6 +35,12 @@ export default function Login() {
     progress: undefined,
     theme:"dark",
   };
+
+  useEffect(() => {
+    if(localStorage.getItem("snaptalk-user")) {
+      navigate("/");
+    }
+  }, []);
   
   const handleValidation = () => {
     const { username, password } = values;
