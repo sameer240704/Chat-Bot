@@ -60,7 +60,7 @@ export default function Avatar() {
                     { image: avatars[selectedAvatar] }
                 );
 
-                console.log(data);
+                console.log(data.image);
 
                 if(data.isSet) {
                     user.isAvatarImageSet = true;

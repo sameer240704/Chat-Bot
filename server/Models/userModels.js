@@ -18,9 +18,13 @@ const userSchema = new mongoose.Schema({
         required: true,
         min: 8,
     },
-    isAvatarImage: {
+    isAvatarImageSet: {
         type: Boolean,
         default: 0,
+    },
+    avatarImage: {
+        type: String,
+        default: "",
     }
 });
 

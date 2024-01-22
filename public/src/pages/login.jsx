@@ -68,10 +68,10 @@ export default function Login() {
         toast.error(data.msg, toastOptions);
       }
       if(data.status) {
-        localStorage.setItem("snaptalk-user", JSON.stringify(data.user));
+        localStorage.setItem("snaptalk-user", JSON.stringify(data));
 
         if(isChecked) {
-          localStorage.setItem("snaptal-remember", "true");
+          localStorage.setItem("snaptalk-remember", "true");
         }
         navigate("/")
       } 
