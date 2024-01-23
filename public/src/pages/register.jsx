@@ -38,7 +38,7 @@ export default function Register() {
     if(localStorage.getItem("snaptalk-user")) {
       navigate("/");
     }
-  }, []);
+  }, [ navigate ]);
 
   function isDigit(character) {
     return /^\d$/.test(character);

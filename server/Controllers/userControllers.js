@@ -77,6 +77,7 @@ module.exports.snaptalk = async ( req, res, next ) => {
         return res.json(users);
     }
     catch(err) {
+        console.log(`Error: ${err.message}`);
         next(err);
     }
 }

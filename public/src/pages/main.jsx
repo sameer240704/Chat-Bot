@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { snaptalkRoute } from "../utils/APIRoutes";
+import Contacts from "../components/Contacts";
 import bgImage from "../assets/bgimage.jpg";
 
 export default function Main() {
@@ -12,39 +13,53 @@ export default function Main() {
 
   const [ currentUser, setCurrentUser ] = useState(undefined);
 
-  const redirect = async () => {
-    if(!localStorage.getItem("snaptalk-user")) {
-        navigate("/login")
-    }
-    else {
-      setCurrentUser(await JSON.parse(localStorage.getItem("snaptalk-user")));
-    }
-  };
-
   useEffect(() => {
-    redirect();
-  }, []);
+    const redirect = async () => {
+      const userJSON = localStorage.getItem("snaptalk-user");
 
-  const getData = async () => {
-    if(currentUser) {
-      if(currentUser.isAvatarImageSet) {
-        const data = await axios.get(`${snaptalkRoute}/${currentUser._id}`);
-        setContacts(data.data);
+      if(!userJSON) {
+          navigate("/login");
       }
       else {
-        navigate("/avatar");
+        const user = await JSON.parse(userJSON);
+        setCurrentUser(user);
+
+        if(!user.isAvatarImageSet && window.location.pathname !== "/avatar") {
+          navigate("/avatar");
+        }
       }
-    }
-  }
+    };
+
+    redirect();
+
+  }, [ navigate ]);
 
   useEffect(() => {
-    getData();
-  }, []);
+    const fetchData = async () => {
+      if(currentUser) {
+        if(currentUser.isAvatarImageSet) {
+          try {
+            const response = await axios.get(`${snaptalkRoute}/${currentUser._id}`);
+            setContacts(response.data);
+          } 
+          catch(err) {
+            console.log(`Error fetching data: ${err.message}`);
+          }
+        } 
+        else {
+          navigate("/avatar");
+        }
+      }
+    };
+  
+    fetchData();
+  
+  }, [currentUser, navigate]);
 
   return (
     <Container>
       <div className="container">
-
+        <Contacts contacts={ contacts } currentUser={ currentUser } />
       </div>
     </Container>
   )
@@ -68,6 +83,7 @@ const Container = styled.div`
     width: 85vw;
     background-color: rgba(0, 0, 0, 0.6);
     display: grid;
+    border-radius: 1rem;
     grid-template-columns: 25% 75%;
     @media screen and (min-width: 720px) and (max-width: 1080px) {
       grid-template-columns: 35% 65%;

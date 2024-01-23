@@ -40,7 +40,7 @@ export default function Login() {
     if(localStorage.getItem("snaptalk-user")) {
       navigate("/");
     }
-  }, []);
+  }, [ navigate ]);
   
   const handleValidation = () => {
     const { username, password } = values;
@@ -73,7 +73,7 @@ export default function Login() {
         if(isChecked) {
           localStorage.setItem("snaptalk-remember", "true");
         }
-        navigate("/avatar");
+        navigate("/");
       } 
     }
   };
@@ -90,7 +90,7 @@ export default function Login() {
     if(rememberMe === "true" && user) {
       navigate("/avatar");
     }
-  }, [navigate]);
+  }, [ navigate ]);
 
   return (
     <>

@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { register, login, avatar } = require("../Controllers/userControllers");
+const { register, login, avatar, snaptalk } = require("../Controllers/userControllers");
 
 router.post("/register", register);
 router.post("/login", login);

@@ -32,15 +32,25 @@ export default function Avatar() {
         theme:"dark",
     };
 
-    const redirect = async () => {
-        if(!localStorage.getItem("snaptalk-user")) {
-            navigate("/login")
-        }
-    };
+    
 
     useEffect(() => {
+        const redirect = async () => {
+            const userJSON = localStorage.getItem("snaptalk-user");
+            if(!userJSON) {
+                navigate("/login");
+            }
+            else {
+                const user = await JSON.parse(userJSON);
+                if(user.isAvatarImageSet) {
+                    navigate("/");
+                }
+            }
+        };
+
         redirect();
-    }, []);
+
+    }, [ navigate ]);
 
     const setProfilePicture = async () => {
         if(selectedAvatar === undefined) {
@@ -60,8 +70,6 @@ export default function Avatar() {
                     { image: avatars[selectedAvatar] }
                 );
 
-                console.log(data.image);
-
                 if(data.isSet) {
                     user.isAvatarImageSet = true;
                     user.avatarImage = data.image;
@@ -77,26 +85,27 @@ export default function Avatar() {
             }
         }
     };
-
-    const fetchAvatars = async () => {
-        try {
-            const data = [];
-            for (let i = 0; i < 5; i += 1) {
-                const image = await axios.get(`${api}/${Math.round(Math.random() * 1000)}`);
-                const buffer = Buffer.from(image.data, "binary")
-                data.push(buffer.toString("base64"));
-            }
-            setAvatars(data);
-            setIsLoading(false);
-        }
-        catch(err) {
-            console.log(`Fetch Avatar Error: ${err.message}`);
-            setIsLoading(false);
-        }
-    }
     
     useEffect(() => {
+        const fetchAvatars = async () => {
+            try {
+                const data = [];
+                for (let i = 0; i < 5; i += 1) {
+                    const image = await axios.get(`${api}/${Math.round(Math.random() * 1000)}`);
+                    const buffer = Buffer.from(image.data, "binary")
+                    data.push(buffer.toString("base64"));
+                }
+                setAvatars(data);
+                setIsLoading(false);
+            }
+            catch(err) {
+                console.log(`Fetch Avatar Error: ${err.message}`);
+                setIsLoading(false);
+            }
+        }
+
         fetchAvatars();
+
     }, []);
 
     return (
@@ -105,7 +114,7 @@ export default function Avatar() {
             isLoading ? 
             (<Container>
                 <img src={loader} className="loader" alt="Loader" />
-            </Container>) : (
+            </Container> ) : (
             <Container>
                 <div className="title">
                     <Typewriter 
@@ -122,7 +131,7 @@ export default function Avatar() {
                         }}
                     />
                 </div>
-                <div className="avatars">{
+                <div className="avatars"> {
                     avatars.map((avatar, index) => {
                         return (
                             <div 
