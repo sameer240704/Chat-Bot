@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 export default function Contacts({ contacts, currentUser }) {
 
@@ -9,6 +11,8 @@ export default function Contacts({ contacts, currentUser }) {
     const [ currentUserImage, setCurrentUserImage ] = useState("");
 
     const [ currentSelected, setCurrentSelected ] = useState("");
+
+    const [ searchUser, setSearchUser ] = useState("");
 
     useEffect(() => {
         if(currentUser) {
@@ -25,17 +29,30 @@ export default function Contacts({ contacts, currentUser }) {
                 currentUserImage && currentUsername && (
                     <Container>
                         <div className="brand">
-                            <img src={Logo} alt="Logo" />
-                            <h3>SnapTalk</h3>
+                            <div className="flex1">
+                                <img src={Logo} alt="Logo" />
+                                <h3>SnapTalk</h3>
+                            </div>
+                            <div className="hr"></div>  
                         </div>
                         <div className="contacts">
+                            <div className="search-button">
+                                <FontAwesomeIcon icon={faMagnifyingGlass} className="f-awsm" />
+                                <input 
+                                    className="search"
+                                    placeholder="Search for a SnapTalker"
+                                    value={searchUser}
+                                    onChange={(event) => setSearchUser(event.target.value)}
+                                >
+                                </input>
+                            </div>
                             {
                                 contacts.map(( contact, index ) => {
-                                    return (
+                                    return (                    
                                         <div 
+                                            key={contact._id} 
                                             className={`contact 
                                                 ${index === currentSelected ? "selected" : "" }`} 
-                                                key={index} 
                                         >
                                             <div className="avatar">
                                                 <img 
@@ -49,6 +66,7 @@ export default function Contacts({ contacts, currentUser }) {
                                                 </h3>
                                             </div>
                                         </div>
+                                    
                                     );
                                 })
                             }
@@ -75,8 +93,133 @@ export default function Contacts({ contacts, currentUser }) {
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: 10% 75% 15%;
+    grid-template-rows: 7% 83% 10%;
     overflow: hidden;
-    background-color: #080420;
-    
+    background-color: #120d30;
+    .brand {
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        margin: 10px 0px 0px 0px;
+        .flex1 {
+            display: flex;
+            gap: .5rem;
+            img {
+                height: 20px;
+                width: 20px;
+                margin-left: 10px;
+            }
+            h3 {
+                font-size: 20px;
+            }
+        }
+        .hr {
+            height: 1px;
+            width: 400px;
+            background-color: white;
+            margin-left: 0px;
+        }
+    }
+    .contacts {
+        display: flex;
+        flex-direction: column;
+        margin: 0 1rem 0 1rem;
+        overflow: auto;
+        gap: 1rem;
+        &::-webkit-scrollbar {
+            width: 0.5rem;
+            &-thumb {
+                background-color: rgba(233, 234, 235, 0.5)
+                width: 0.1rem;
+                border-radius: 10px;
+            }
+        }
+        .search-button {
+            height: 65px;
+            display: flex;
+            align-items: center;
+            background-color: #120d30;
+            .f-awsm {
+                height: 20px;
+                padding: 10px;
+                background-color: rgba(233, 234, 235, 0.5);
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+            .search {
+                height: 40px;
+                width: calc(270px - 1rem);
+                padding: 15px;
+                gap: 1rem;
+                border: 0;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                background-color: rgba(233, 234, 235, 0.5);
+                font-size: 16px;
+                font-weight: 500;
+                color: white;
+                &::placeholder {
+                    color: white;
+                }
+            }
+            .search:focus {
+                outline: none;
+            }
+        }
+        .contact {
+            background-color: rgba(233, 234, 235, 0.5);
+            min-height: 4rem;
+            width: calc(310px - 1rem);
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 20px;
+            gap: 1rem;
+            display: flex;
+            align-items: center;
+            transition: 0.5s ease-in-out;
+            z-index: 0;
+            .avatar {
+                img {
+                    height: 40px;
+                    width: 40px;
+                }
+            }
+            .username {
+                h3 {
+                    font-size: 16px;
+                    font-weight: 200;
+                }
+            }
+        }
+        .contact:first-child {
+            padding-top: 10rem;
+        }
+        .contact:last-child {
+            margin-bottom: 1rem;
+        }
+    }
+    .contacts:before {
+        content: '';
+        display: block;
+    }
+    .current-user {
+        background-color: #4a2ef2;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        .avatar {
+            img {
+                height: 3rem;
+                margin-left: 10px;
+                border: 2px solid #d9d8e3;
+                border-radius: 50%;
+            }
+        }
+        .username {
+            h1 {
+                color: white;
+            }
+        }
+    }
 `;  
