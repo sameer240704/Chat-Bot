@@ -68,11 +68,8 @@ export default function Login() {
         toast.error(data.msg, toastOptions);
       }
       if(data.status) {
+        // localStorage.setItem("snaptalk-user", JSON.stringify(data.user));
         localStorage.setItem("snaptalk-user", JSON.stringify(data));
-
-        if(isChecked) {
-          localStorage.setItem("snaptalk-remember", "true");
-        }
         navigate("/");
       } 
     }
@@ -81,16 +78,7 @@ export default function Login() {
   const handleChange = (event) => {
     event.preventDefault();
     setValues({ ...values, [event.target.name]: event.target.value });
-  }
-
-  useEffect(() => {
-    const rememberMe = localStorage.getItem("snaptalk-remember");
-    const user = localStorage.getItem("snaptalk-user");
-
-    if(rememberMe === "true" && user) {
-      navigate("/avatar");
-    }
-  }, [ navigate ]);
+  };
 
   return (
     <>

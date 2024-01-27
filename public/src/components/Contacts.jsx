@@ -4,7 +4,7 @@ import Logo from "../assets/logo.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
-export default function Contacts({ contacts, currentUser }) {
+export default function Contacts({ contacts, currentUser, changeChat }) {
 
     const [ currentUsername, setCurrentUsername ] = useState("");
 
@@ -21,7 +21,10 @@ export default function Contacts({ contacts, currentUser }) {
         }  
     }, [ currentUser ]);
 
-    const changeCurrentChat = ( index, contact ) => {}
+    const changeCurrentChat = ( index, contact ) => {
+        setCurrentSelected(index);
+        changeChat(contact);
+    }
 
     return (
         <>
@@ -35,17 +38,17 @@ export default function Contacts({ contacts, currentUser }) {
                             </div>
                             <div className="hr"></div>  
                         </div>
+                        <div className="search-button">
+                            <FontAwesomeIcon icon={faMagnifyingGlass} className="f-awsm" />
+                            <input 
+                                className="search"
+                                placeholder="Search for a SnapTalker"
+                                value={searchUser}
+                                onChange={(event) => setSearchUser(event.target.value)}
+                            >
+                            </input>
+                        </div>
                         <div className="contacts">
-                            <div className="search-button">
-                                <FontAwesomeIcon icon={faMagnifyingGlass} className="f-awsm" />
-                                <input 
-                                    className="search"
-                                    placeholder="Search for a SnapTalker"
-                                    value={searchUser}
-                                    onChange={(event) => setSearchUser(event.target.value)}
-                                >
-                                </input>
-                            </div>
                             {
                                 contacts.map(( contact, index ) => {
                                     return (                    
@@ -53,6 +56,7 @@ export default function Contacts({ contacts, currentUser }) {
                                             key={contact._id} 
                                             className={`contact 
                                                 ${index === currentSelected ? "selected" : "" }`} 
+                                            onClick={() => changeCurrentChat(index, contact)}
                                         >
                                             <div className="avatar">
                                                 <img 
@@ -93,9 +97,10 @@ export default function Contacts({ contacts, currentUser }) {
 
 const Container = styled.div`
     display: grid;
-    grid-template-rows: 7% 83% 10%;
+    grid-template-rows: 7% 10% 73% 10%;
     overflow: hidden;
     background-color: #120d30;
+
     .brand {
         height: fit-content;
         display: flex;
@@ -121,50 +126,53 @@ const Container = styled.div`
             margin-left: 0px;
         }
     }
+
+    .search-button {
+        height: 65px;
+        display: flex;
+        align-items: center;
+        background-color: #120d30;
+        .f-awsm {
+            height: 20px;
+            padding: 10px;
+            background-color: rgba(233, 234, 235, 0.2);
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            margin-left: 1rem;
+        }
+        .search {
+            height: 40px;
+            width: calc(270px - 1rem);
+            padding: 15px;
+            gap: 1rem;
+            border: 0;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            background-color: rgba(233, 234, 235, 0.2);
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            &::placeholder {
+                color: white;
+            }
+        }
+        .search:focus {
+            outline: none;
+        }
+    }
+
     .contacts {
         display: flex;
         flex-direction: column;
-        margin: 0 1rem 0 1rem;
+        margin: 0 0rem 0 1rem;
         overflow: auto;
         gap: 1rem;
         &::-webkit-scrollbar {
-            width: 0.5rem;
+            width: 0.1rem;
             &-thumb {
-                background-color: rgba(233, 234, 235, 0.5)
+                background-color: rgb(233, 234, 235);
                 width: 0.1rem;
                 border-radius: 10px;
-            }
-        }
-        .search-button {
-            height: 65px;
-            display: flex;
-            align-items: center;
-            background-color: #120d30;
-            .f-awsm {
-                height: 20px;
-                padding: 10px;
-                background-color: rgba(233, 234, 235, 0.5);
-                border-top-left-radius: 10px;
-                border-bottom-left-radius: 10px;
-            }
-            .search {
-                height: 40px;
-                width: calc(270px - 1rem);
-                padding: 15px;
-                gap: 1rem;
-                border: 0;
-                border-top-right-radius: 10px;
-                border-bottom-right-radius: 10px;
-                background-color: rgba(233, 234, 235, 0.5);
-                font-size: 16px;
-                font-weight: 500;
-                color: white;
-                &::placeholder {
-                    color: white;
-                }
-            }
-            .search:focus {
-                outline: none;
             }
         }
         .contact {
@@ -192,19 +200,20 @@ const Container = styled.div`
                 }
             }
         }
+        .selected {
+            background-color: rgba(94, 67, 250, .8);
+        }
         .contact:first-child {
-            padding-top: 10rem;
+            margin-top: 0;
         }
         .contact:last-child {
             margin-bottom: 1rem;
         }
     }
-    .contacts:before {
-        content: '';
-        display: block;
-    }
+
     .current-user {
-        background-color: #4a2ef2;
+        background-color: #fce055;
+        background-image: linear-gradient(319deg, #fce055 0%, #256eff 37%, #46237a 100%);
         display: flex;
         align-items: center;
         gap: 1rem;

@@ -40,12 +40,6 @@ export default function Avatar() {
             if(!userJSON) {
                 navigate("/login");
             }
-            else {
-                const user = await JSON.parse(userJSON);
-                if(user.isAvatarImageSet) {
-                    navigate("/");
-                }
-            }
         };
 
         redirect();
@@ -53,7 +47,7 @@ export default function Avatar() {
     }, [ navigate ]);
 
     const setProfilePicture = async () => {
-        if(selectedAvatar === undefined) {
+        if(selectedAvatar === "") {
             toast.error("Please Select an Avatar", toastOptions);
         }
         else {
@@ -191,9 +185,7 @@ const Container = styled.div`
     .title {
         font-size: 5rem;    
         font-weight: 800;
-        background: linear-gradient(to right, #111111, #121212, #333333, #353535, #535353, #777777);
-            -webkit-text-fill-color: transparent;
-            -webkit-background-clip: text;
+        color: #111111;
         margin-bottom: 2rem;
     }
     .avatars {
@@ -274,7 +266,9 @@ const Container = styled.div`
     }
 
     .loader {
-        height: 500px;
-        width: 500px;
+        height: 100vh;
+        object-fit: contain;
+        // mix-blend-mode: color-burn;
+        index: 1;
     }
 `;

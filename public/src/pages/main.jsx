@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { snaptalkRoute } from "../utils/APIRoutes";
 import Contacts from "../components/Contacts";
+import WelcomeUser from "../components/WelcomeUser";
 import bgImage from "../assets/bgimage.jpg";
 
 export default function Main() {
@@ -13,20 +14,23 @@ export default function Main() {
 
   const [ currentUser, setCurrentUser ] = useState(undefined);
 
+  const [ currentChat, setCurrentChat ] = useState(undefined);
+
   useEffect(() => {
     const redirect = async () => {
-      const userJSON = localStorage.getItem("snaptalk-user");
+      try {
+        const userJSON = localStorage.getItem("snaptalk-user");
 
-      if(!userJSON) {
+        if(!userJSON) {
           navigate("/login");
-      }
-      else {
-        const user = await JSON.parse(userJSON);
-        setCurrentUser(user);
-
-        if(!user.isAvatarImageSet && window.location.pathname !== "/avatar") {
-          navigate("/avatar");
         }
+        else {
+          const user = await JSON.parse(userJSON);
+          setCurrentUser(user);
+        }
+      }
+      catch(err) {
+        console.log(`Redirect Error: ${err.message}`);
       }
     };
 
@@ -37,6 +41,7 @@ export default function Main() {
   useEffect(() => {
     const fetchData = async () => {
       if(currentUser) {
+        console.log(`currentUser.isAvatarImageSet: ${currentUser.isAvatarImageSet}`);
         if(currentUser.isAvatarImageSet) {
           try {
             const response = await axios.get(`${snaptalkRoute}/${currentUser._id}`);
@@ -56,10 +61,21 @@ export default function Main() {
   
   }, [currentUser, navigate]);
 
+  const handleChatChange = (chat) => {
+
+  }
+
   return (
     <Container>
       <div className="container">
-        <Contacts contacts={ contacts } currentUser={ currentUser } />
+        <Contacts 
+          contacts = { contacts } 
+          currentUser = { currentUser } 
+          changeChat = { handleChatChange }
+        />
+        <WelcomeUser 
+          
+        />
       </div>
     </Container>
   )

@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     },
     isAvatarImageSet: {
         type: Boolean,
-        default: 0,
+        default: false,
     },
     avatarImage: {
         type: String,
