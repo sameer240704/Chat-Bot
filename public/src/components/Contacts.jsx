@@ -7,12 +7,10 @@ import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 export default function Contacts({ contacts, currentUser, changeChat }) {
 
     const [ currentUsername, setCurrentUsername ] = useState("");
-
     const [ currentUserImage, setCurrentUserImage ] = useState("");
-
     const [ currentSelected, setCurrentSelected ] = useState("");
-
     const [ searchUser, setSearchUser ] = useState("");
+    const [ foundContacts, setFoundContacts ] = useState([]);
 
     useEffect(() => {
         if(currentUser) {
@@ -26,8 +24,20 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         changeChat(contact);
     }
 
+    const searchDesiredUser = (user) => {
+        const matchedContacts = contacts.filter((contact) => {
+            return contact.username.toLowerCase().includes(user.toLowerCase());
+        })
+        setFoundContacts(matchedContacts);
+    };
+
+    useEffect(() => {
+        searchDesiredUser(searchUser);
+    }, [searchUser]);
+
     const clearSearch = () => {
-        setSearchUser("")
+        setSearchUser("");
+        setFoundContacts([]);
     };
 
     return (
@@ -60,10 +70,10 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                                 onClick={() => clearSearch()}
                             />
                         </div>
-                        <div className="contacts">
-                            {
-                                contacts.map(( contact, index ) => {
-                                    return (                    
+                        { searchUser !== "" ? (
+                            <div className="contacts"> {
+                                foundContacts.map(( contact, index ) => {
+                                    return (
                                         <div 
                                             key={contact._id} 
                                             className={`contact 
@@ -82,11 +92,39 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                                                 </h3>
                                             </div>
                                         </div>
-                                    
-                                    );
-                                })
-                            }
-                        </div>
+                                    )
+                                })}
+                            </div>
+                        ):
+                        (
+                            <div className="contacts">
+                                {
+                                    contacts.map(( contact, index ) => {
+                                        return (                    
+                                            <div 
+                                                key={contact._id} 
+                                                className={`contact 
+                                                    ${index === currentSelected ? "selected" : "" }`} 
+                                                onClick={() => changeCurrentChat(index, contact)}
+                                            >
+                                                <div className="avatar">
+                                                    <img 
+                                                        src={`data:image/svg+xml;base64, ${ contact.avatarImage }`} 
+                                                        alt="Avatar" 
+                                                    />
+                                                </div>
+                                                <div className="username">
+                                                    <h3>
+                                                        { contact.username }
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        
+                                        );
+                                    })
+                                }
+                            </div>
+                        )}
                         <div className="current-user">
                             <div className="avatar">
                                 <img 
@@ -193,7 +231,7 @@ const Container = styled.div`
         }
         .contact {
             background-color: rgba(233, 234, 235, 0.5);
-            min-height: 4rem;
+            height: 4rem;
             width: calc(310px - 1rem);
             border-radius: 10px;
             cursor: pointer;
