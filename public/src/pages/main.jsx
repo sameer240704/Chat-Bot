@@ -12,9 +12,7 @@ export default function Main() {
 
   const navigate = useNavigate();
   const [ contacts, setContacts ] = useState([]);
-
   const [ currentUser, setCurrentUser ] = useState(undefined);
-
   const [ currentChat, setCurrentChat ] = useState(undefined);
 
   useEffect(() => {
@@ -42,7 +40,7 @@ export default function Main() {
   useEffect(() => {
     const fetchData = async () => {
       if(currentUser) {
-        console.log(`currentUser.isAvatarImageSet: ${currentUser.isAvatarImageSet}`);
+        console.log(currentUser);
         if(currentUser.isAvatarImageSet) {
           try {
             const response = await axios.get(`${snaptalkRoute}/${currentUser._id}`);
@@ -78,7 +76,7 @@ export default function Main() {
           currentChat === undefined ? (
             <WelcomeUser />
           ):(
-            <ChatContainer currentChat = { currentUser } />
+            <ChatContainer currentChat = { currentChat } />
           )
         }
       </div>

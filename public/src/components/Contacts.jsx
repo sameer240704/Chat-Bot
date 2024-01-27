@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Logo from "../assets/logo.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+import Logout from "./Logout";
 
 export default function Contacts({ contacts, currentUser, changeChat }) {
 
@@ -25,6 +26,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
     }
 
     const searchDesiredUser = (user) => {
+        setCurrentSelected("");
         const matchedContacts = contacts.filter((contact) => {
             return contact.username.toLowerCase().includes(user.toLowerCase());
         })
@@ -40,6 +42,8 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         setFoundContacts([]);
     };
 
+    const popWarning = () => window.alert(`You are about to be logged out`);
+
     return (
         <>
             {
@@ -48,14 +52,14 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                         <div className="brand">
                             <div className="flex1">
                                 <img src={Logo} alt="Logo" />
-                                <h3>SnapTalk</h3>
+                                <h6>SnapTalk</h6>
                             </div>
-                            <div className="hr"></div>  
                         </div>
                         <div className="search-button">
                             <FontAwesomeIcon 
                                 icon={faMagnifyingGlass} 
                                 className="f-awsm1" 
+                                style={{ color: "#222629"}}
                             />
                             <input 
                                 className="search"
@@ -68,6 +72,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                                 icon={ faXmark } 
                                 className="f-awsm2"
                                 onClick={() => clearSearch()}
+                                style={{ color: "#222629"}}
                             />
                         </div>
                         { searchUser !== "" ? (
@@ -95,7 +100,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                                     )
                                 })}
                             </div>
-                        ):
+                        ) :
                         (
                             <div className="contacts">
                                 {
@@ -125,6 +130,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                                 }
                             </div>
                         )}
+
                         <div className="current-user">
                             <div className="avatar">
                                 <img 
@@ -137,6 +143,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                                     { currentUsername }
                                 </h1>
                             </div>
+                            <Logout className="logout" />
                         </div>
                     </Container>
                 )
@@ -147,31 +154,27 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
 
 const Container = styled.div`
     display: grid;
-    grid-template-rows: 7% 10% 73% 10%;
+    grid-template-rows: 5% 11% 72%;
     overflow: hidden;
-    background-color: #120d30;
+    background-color: #222629;
     .brand {
         height: fit-content;
         display: flex;
         flex-direction: column;
+        justify-content: center;
         gap: .5rem;
         margin: 10px 0px 0px 0px;
         .flex1 {
             display: flex;
             gap: .5rem;
             img {
-                height: 20px;
-                width: 20px;
+                height: 21px;
+                width: 21px;
                 margin-left: 10px;
             }
-            h3 {
-                font-size: 20px;
+            h6 {
+                font-size: 18px;
             }
-        }
-        .hr {
-            height: 1px;
-            background-color: white;
-            margin-left: 0px;
         }
     }
 
@@ -179,11 +182,11 @@ const Container = styled.div`
         height: 65px;
         display: flex;
         align-items: center;
-        background-color: #120d30;
+        background-color: #222629;
         .f-awsm1 {
             height: 20px;
             padding: 10px;
-            background-color: rgba(233, 234, 235, 0.2);
+            background-color: rgba(107, 110, 112, 0.8);
             border-top-left-radius: 10px;
             border-bottom-left-radius: 10px;
             margin-left: 1rem;
@@ -194,12 +197,13 @@ const Container = styled.div`
             padding: 15px 5px 15px 5px;
             gap: 1rem;
             border: 0;
-            background-color: rgba(233, 234, 235, 0.2);
+            background-color: rgba(107, 110, 112, 0.8);
             font-size: 16px;
             font-weight: 500;
-            color: white;
+            color: #FFFFFF;
             &::placeholder {
-                color: #b0b0b0;
+                color: #ffffff;
+                font-weight: 500;
             }
         }
         .search:focus {
@@ -208,7 +212,7 @@ const Container = styled.div`
         .f-awsm2 {
             height: 20px;
             padding: 10px;
-            background-color: rgba(233, 234, 235, 0.2);
+            background-color: rgba(107, 110, 112, 0.8);
             border-top-right-radius: 10px;
             border-bottom-right-radius: 10px;
             cursor: pointer;
@@ -222,15 +226,15 @@ const Container = styled.div`
         overflow: auto;
         gap: 1rem;
         &::-webkit-scrollbar {
-            width: 0.2rem;
+            width: 0.5rem;
             &-thumb {
-                background-color: #9F9F9F;
-                border: 1px solid #878787;
+                background-color: #5D6062;
+                border: 1px solid #303233;
                 border-radius: 3px;
             }
         }
         .contact {
-            background-color: rgba(233, 234, 235, 0.5);
+            background-color: rgba(237, 65, 52, 0.6);
             height: 4rem;
             width: calc(310px - 1rem);
             border-radius: 10px;
@@ -249,13 +253,13 @@ const Container = styled.div`
             }
             .username {
                 h3 {
-                    font-size: 16px;
+                    font-size: 18px;
                     font-weight: 200;
                 }
             }
         }
         .selected {
-            background-color: rgba(94, 67, 250, .8);
+            background-color: rgba(237, 65, 52, 1);
         }
         .contact:first-child {
             margin-top: 0;
@@ -266,8 +270,7 @@ const Container = styled.div`
     }
 
     .current-user {
-        background-color: #fce055;
-        background-image: linear-gradient(319deg, #fce055 0%, #256eff 37%, #46237a 100%);
+        background-color: rgba(107, 110, 112, 0.8);
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -275,7 +278,7 @@ const Container = styled.div`
             img {
                 height: 2.5rem;
                 margin-left: 10px;
-                border: 3px solid #d9d8e3;
+                border: 3px solid #45F03C;
                 border-radius: 50%;
             }
         }
@@ -285,5 +288,6 @@ const Container = styled.div`
                 font-size: 20px;
             }
         }
+        
     }
 `;  

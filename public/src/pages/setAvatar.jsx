@@ -16,9 +16,7 @@ export default function Avatar() {
     const navigate = useNavigate();
 
     const [ avatars, setAvatars ] = useState([]);
-
     const [ isLoading, setIsLoading ] = useState(true);
-
     const [ selectedAvatar, setSelectedAvatar ] = useState(undefined);
 
     const toastOptions = {

@@ -20,9 +20,7 @@ export default function Login() {
   });
 
   const [ showPassword, setShowPassword ] = useState(false);
-
   const [ isChecked, setChecked ] = useState(false);
-
   const handleCheckboxChange = () => setChecked(!isChecked);
 
   const toastOptions = {
