@@ -6,6 +6,7 @@ import { snaptalkRoute } from "../utils/APIRoutes";
 import Contacts from "../components/Contacts";
 import WelcomeUser from "../components/WelcomeUser";
 import bgImage from "../assets/bgimage.jpg";
+import ChatContainer from "../components/ChatContainer";
 
 export default function Main() {
 
@@ -62,7 +63,7 @@ export default function Main() {
   }, [currentUser, navigate]);
 
   const handleChatChange = (chat) => {
-
+    setCurrentChat(chat);
   }
 
   return (
@@ -73,9 +74,13 @@ export default function Main() {
           currentUser = { currentUser } 
           changeChat = { handleChatChange }
         />
-        <WelcomeUser 
-          
-        />
+        {
+          currentChat === undefined ? (
+            <WelcomeUser />
+          ):(
+            <ChatContainer currentChat = { currentUser } />
+          )
+        }
       </div>
     </Container>
   )
@@ -97,7 +102,7 @@ const Container = styled.div`
   .container {
     height: 85vh;
     width: 85vw;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
     display: grid;
     border-radius: 1rem;
     grid-template-columns: 25% 75%;

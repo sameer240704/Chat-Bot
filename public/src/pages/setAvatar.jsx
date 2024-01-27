@@ -266,7 +266,7 @@ const Container = styled.div`
     }
 
     .loader {
-        height: 100vh;
+        height: 50vh;
         object-fit: contain;
         // mix-blend-mode: color-burn;
         index: 1;

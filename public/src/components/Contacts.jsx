@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 export default function Contacts({ contacts, currentUser, changeChat }) {
 
@@ -26,6 +26,10 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         changeChat(contact);
     }
 
+    const clearSearch = () => {
+        setSearchUser("")
+    };
+
     return (
         <>
             {
@@ -39,7 +43,10 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                             <div className="hr"></div>  
                         </div>
                         <div className="search-button">
-                            <FontAwesomeIcon icon={faMagnifyingGlass} className="f-awsm" />
+                            <FontAwesomeIcon 
+                                icon={faMagnifyingGlass} 
+                                className="f-awsm1" 
+                            />
                             <input 
                                 className="search"
                                 placeholder="Search for a SnapTalker"
@@ -47,6 +54,11 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                                 onChange={(event) => setSearchUser(event.target.value)}
                             >
                             </input>
+                            <FontAwesomeIcon 
+                                icon={ faXmark } 
+                                className="f-awsm2"
+                                onClick={() => clearSearch()}
+                            />
                         </div>
                         <div className="contacts">
                             {
@@ -100,7 +112,6 @@ const Container = styled.div`
     grid-template-rows: 7% 10% 73% 10%;
     overflow: hidden;
     background-color: #120d30;
-
     .brand {
         height: fit-content;
         display: flex;
@@ -121,7 +132,6 @@ const Container = styled.div`
         }
         .hr {
             height: 1px;
-            width: 400px;
             background-color: white;
             margin-left: 0px;
         }
@@ -132,7 +142,7 @@ const Container = styled.div`
         display: flex;
         align-items: center;
         background-color: #120d30;
-        .f-awsm {
+        .f-awsm1 {
             height: 20px;
             padding: 10px;
             background-color: rgba(233, 234, 235, 0.2);
@@ -142,22 +152,28 @@ const Container = styled.div`
         }
         .search {
             height: 40px;
-            width: calc(270px - 1rem);
-            padding: 15px;
+            width: calc(234px - 1rem);
+            padding: 15px 5px 15px 5px;
             gap: 1rem;
             border: 0;
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
             background-color: rgba(233, 234, 235, 0.2);
             font-size: 16px;
             font-weight: 500;
             color: white;
             &::placeholder {
-                color: white;
+                color: #b0b0b0;
             }
         }
         .search:focus {
             outline: none;
+        }
+        .f-awsm2 {
+            height: 20px;
+            padding: 10px;
+            background-color: rgba(233, 234, 235, 0.2);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            cursor: pointer;
         }
     }
 
@@ -168,11 +184,11 @@ const Container = styled.div`
         overflow: auto;
         gap: 1rem;
         &::-webkit-scrollbar {
-            width: 0.1rem;
+            width: 0.2rem;
             &-thumb {
-                background-color: rgb(233, 234, 235);
-                width: 0.1rem;
-                border-radius: 10px;
+                background-color: #9F9F9F;
+                border: 1px solid #878787;
+                border-radius: 3px;
             }
         }
         .contact {
@@ -219,15 +235,16 @@ const Container = styled.div`
         gap: 1rem;
         .avatar {
             img {
-                height: 3rem;
+                height: 2.5rem;
                 margin-left: 10px;
-                border: 2px solid #d9d8e3;
+                border: 3px solid #d9d8e3;
                 border-radius: 50%;
             }
         }
         .username {
             h1 {
                 color: white;
+                font-size: 20px;
             }
         }
     }
