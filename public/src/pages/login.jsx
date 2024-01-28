@@ -16,7 +16,7 @@ export default function Login() {
 
   const [ values, setValues ] = useState({
     username: "",
-    password:"",
+    password: "",
   });
 
   const [ showPassword, setShowPassword ] = useState(false);
@@ -66,8 +66,7 @@ export default function Login() {
         toast.error(data.msg, toastOptions);
       }
       if(data.status) {
-        // localStorage.setItem("snaptalk-user", JSON.stringify(data.user));
-        localStorage.setItem("snaptalk-user", JSON.stringify(data));
+        localStorage.setItem("snaptalk-user", JSON.stringify(data.currentUser));
         navigate("/");
       } 
     }
@@ -223,7 +222,7 @@ const FormContainer = styled.div`
   button {
     font-weight: bold;
     color: white;
-    background-color: #171717;
+    background-color: #1c1c1c;
     padding: 1em 2em;
     border: none;
     border-radius: .6rem;
@@ -243,7 +242,7 @@ const FormContainer = styled.div`
     transform: translate(-50%, -50%);
     height: 76px;
     width: 76px;
-    background-color: #0c66ed;
+    background-color: #de433c;
     border-radius: 50%;
     transition: .6s ease;
   }

@@ -22,6 +22,7 @@ module.exports.register = async ( req, res, next ) => {
         return res.json({ status: true, user });
     }
     catch(err) {
+        console.log(`Register Error: ${err.message}`);
         next(err);
     }
 };
@@ -41,6 +42,7 @@ module.exports.login = async ( req, res, next ) => {
         return res.json({ status: true, currentUser });
     }
     catch(err) {
+        console.log(`Login Error: ${err.message}`);
         next(err);
     }
 };
@@ -61,24 +63,24 @@ module.exports.avatar = async ( req, res, next ) => {
         return res.json({ isSet: userData.isAvatarImageSet, image: userData.avatarImage, });
     }
     catch(err) {
-        console.log(`Error: ${err.message}`);
+        console.log(`Avatar Error: ${err.message}`);
         next(err);
     }
 };
 
 module.exports.snaptalk = async ( req, res, next ) => {
     try {
-        const users = await User.find({ _id: { $ne: req.params.id }}).select([
+        const users = await User.find({ "_id": { $ne: req.params.id }}).select([
             "email",
             "username",
             "avatarImage",
             "_id",
-        ]);
+        ]).lean();
 
         return res.json(users);
     }
     catch(err) {
-        console.log(`Error: ${err.message}`);
+        console.log(`Snaptalk Error: ${err.message}`);
         next(err);
     }
 }

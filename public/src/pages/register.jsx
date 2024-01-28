@@ -256,7 +256,7 @@ const FormContainer = styled.div`
   button {
     font-weight: bold;
     color: white;
-    background-color: #171717;
+    background-color: #1c1c1c;
     padding: 1em 2em;
     border: none;
     border-radius: .6rem;
@@ -276,7 +276,7 @@ const FormContainer = styled.div`
     transform: translate(-50%, -50%);
     height: 76px;
     width: 76px;
-    background-color: #0c66ed;
+    background-color: #de433c;
     border-radius: 50%;
     transition: .6s ease;
   }

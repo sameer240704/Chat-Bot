@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import { snaptalkRoute } from "../utils/APIRoutes";
+import { snaptalkRoute, host } from "../utils/APIRoutes";
+import { io } from "socket.io-client";
 import Contacts from "../components/Contacts";
 import WelcomeUser from "../components/WelcomeUser";
 import bgImage from "../assets/bgimage.jpg";
@@ -11,12 +12,13 @@ import ChatContainer from "../components/ChatContainer";
 export default function Main() {
 
   const navigate = useNavigate();
+  const socket = useRef();
   const [ contacts, setContacts ] = useState([]);
-  const [ currentUser, setCurrentUser ] = useState(undefined);
-  const [ currentChat, setCurrentChat ] = useState(undefined);
+  const [ currentUser, setCurrentUser ] = useState("");
+  const [ currentChat, setCurrentChat ] = useState("");
 
   useEffect(() => {
-    const redirect = async () => {
+    (async() => {
       try {
         const userJSON = localStorage.getItem("snaptalk-user");
 
@@ -31,20 +33,17 @@ export default function Main() {
       catch(err) {
         console.log(`Redirect Error: ${err.message}`);
       }
-    };
-
-    redirect();
+    })();
 
   }, [ navigate ]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       if(currentUser) {
-        console.log(currentUser);
         if(currentUser.isAvatarImageSet) {
           try {
-            const response = await axios.get(`${snaptalkRoute}/${currentUser._id}`);
-            setContacts(response.data);
+            const res = await axios.get(`${snaptalkRoute}/${currentUser._id}`);
+            setContacts(res.data);
           } 
           catch(err) {
             console.log(`Error fetching data: ${err.message}`);
@@ -54,11 +53,19 @@ export default function Main() {
           navigate("/avatar");
         }
       }
-    };
+    })();
   
-    fetchData();
-  
-  }, [currentUser, navigate]);
+  }, [ currentUser, navigate ]);
+
+  useEffect(() => {
+    ( async() => {
+      if(currentUser) {
+        socket.current = io(host);
+        socket.current.emit("add-user", currentUser._id);
+      }
+    }
+    )();
+  }, [ currentUser ])
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
@@ -73,12 +80,13 @@ export default function Main() {
           changeChat = { handleChatChange }
         />
         {
-          currentChat === undefined ? (
+          currentChat === "" ? (
             <WelcomeUser />
           ) : (
             <ChatContainer 
               currentChat = { currentChat } 
               currentUser = { currentUser }
+              socket = { socket }
             />
           )
         }
