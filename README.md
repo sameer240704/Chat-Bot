@@ -1,1 +1,7 @@
-# Chat-Bot
+![Register Page](https://github.com/sameer240704/Message-App/assets/142111630/fc459ca4-997d-4003-b147-107b874d7ae7)
+![Login Page](https://github.com/sameer240704/Message-App/assets/142111630/1990fc83-f1e5-4650-a141-bf78c9a02e50)
+![Avatar Page](https://github.com/sameer240704/Message-App/assets/142111630/dd86aca7-9a7a-4d17-b892-67689ed3af73)
+![Welcome Page](https://github.com/sameer240704/Message-App/assets/142111630/b5cbb5e2-ae0a-43fd-a671-38e00ce329b4)
+![Search Functionality](https://github.com/sameer240704/Message-App/assets/142111630/8ef20150-7c32-42d6-96a1-1102beb909ae)
+![User1 Page](https://github.com/sameer240704/Message-App/assets/142111630/7353a9d7-5d42-46d6-82fe-eaa2fcdb3f48)
+![User2 Page](https://github.com/sameer240704/Message-App/assets/142111630/43cfa4f1-e999-4fc5-a9f5-13109fecc9d4)
