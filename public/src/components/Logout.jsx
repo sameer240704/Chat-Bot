@@ -2,11 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 export default function Logout() {
-
   const navigate = useNavigate();
 
   const logoutUser = () => {
@@ -16,18 +15,15 @@ export default function Logout() {
 
   return (
     <Button>
-      <button 
+      <button
         className="logout"
         onClick={() => logoutUser()}
-        style={{ color: "#222629"}}
+        style={{ color: "#222629" }}
       >
-        <FontAwesomeIcon 
-          icon={ faRightToBracket } 
-          className="quit"
-        />
+        <FontAwesomeIcon icon={faRightToBracket} className="quit" />
       </button>
     </Button>
-  )
+  );
 }
 
 const Button = styled.div`
@@ -40,9 +36,9 @@ const Button = styled.div`
     padding: 5px;
     border-radius: 5px;
     .quit {
-        height: 1.5rem;
-        cursor: pointer;
-        transition: .5s ease-in-out;
+      height: 1.5rem;
+      cursor: pointer;
+      transition: 0.5s ease-in-out;
     }
     &:active {
       scale: 0.9;

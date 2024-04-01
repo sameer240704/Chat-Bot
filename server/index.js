@@ -13,42 +13,41 @@ app.use(express.json());
 app.use("/api/auth", userRoutes);
 app.use("/api/messages", messageRoutes);
 
-mongoose.connect(process.env.MONGO_URI, 
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    }    
-)
-.then(() => {
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
     console.log("Connected To Database Successfully");
-})
-.catch((err) => {
-    console.log(`Database Connection Error: ${err.message}`)
-}); 
+  })
+  .catch((err) => {
+    console.log(`Database Connection Error: ${err.message}`);
+  });
 
 const server = app.listen(process.env.PORT, () => {
-    console.log(`Server listening to PORT ${process.env.PORT}`)
+  console.log(`Server listening to PORT ${process.env.PORT}`);
 });
 
 const io = socket(server, {
-    cors: {
-        origin: ["http://localhost:3000", "http://localhost:3001"],
-        credentials: true,
-    },
+  cors: {
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+  },
 });
 
 global.onlineUsers = new Map();
 
 io.on("connection", (socket) => {
-    global.chatSocket = socket;
-    socket.on("add-user", (userId) => {
-        onlineUsers.set(userId, socket.id);
-    });
+  global.chatSocket = socket;
+  socket.on("add-user", (userId) => {
+    onlineUsers.set(userId, socket.id);
+  });
 
-    socket.on("send-msg", (data) => {
-        const sendUserSocket = onlineUsers.get(data.to);
-        if(sendUserSocket) {
-            socket.to(sendUserSocket).emit("msg-receive", data.message);
-        }
-    })
-})
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = onlineUsers.get(data.to);
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-receive", data.message);
+    }
+  });
+});

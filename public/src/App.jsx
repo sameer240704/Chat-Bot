@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./pages/register";
 import Login from "./pages/login";
 import Main from "./pages/main";
 import Avatar from "./pages/setAvatar";
+import { Toaster } from "sonner";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route exact path="/avatar" element={<Avatar />} />
         <Route exact path="/" element={<Main />} />
       </Routes>
+      <Toaster position="top-center" expand={false} richColors />
     </BrowserRouter>
-  )
+  );
 }

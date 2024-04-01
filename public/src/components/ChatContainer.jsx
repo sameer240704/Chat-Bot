@@ -6,14 +6,13 @@ import { addMessageRoute, getMessageRoute } from "../utils/APIRoutes";
 import ChatInput from "./ChatInput";
 
 export default function ChatContainer({ currentChat, currentUser, socket }) {
-
-  const [ userMessages, setUserMessages ] = useState([]);
-  const [ arrivalMessage, setArrivalMessage ] = useState("");
+  const [userMessages, setUserMessages] = useState([]);
+  const [arrivalMessage, setArrivalMessage] = useState("");
   const scrollRef = useRef();
 
   useEffect(() => {
     (async () => {
-      if(currentChat) {
+      if (currentChat) {
         const res = await axios.post(getMessageRoute, {
           from: currentUser._id,
           to: currentChat._id,
@@ -21,28 +20,25 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
         setUserMessages(res.data);
       }
     })();
-
-  }, [ currentChat ]);
+  }, [currentChat]);
 
   useEffect(() => {
-    ( async () => {
-      if(socket.current) {
+    (async () => {
+      if (socket.current) {
         socket.current.on("msg-receive", (message) => {
           setArrivalMessage({ fromSelf: false, message: message });
-        })
+        });
       }
     })();
   }, []);
 
   useEffect(() => {
-    arrivalMessage && setUserMessages((prev) => 
-      [...prev, arrivalMessage]
-    );
+    arrivalMessage && setUserMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [ userMessages ]);
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [userMessages]);
 
   const sendTextMessage = async (message) => {
     await axios.post(addMessageRoute, {
@@ -59,7 +55,7 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
     const messages = [...userMessages];
     messages.push({ fromSelf: true, message: message });
     setUserMessages(messages);
-  }
+  };
 
   return (
     <>
@@ -67,9 +63,9 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
         <div className="header">
           <div className="user">
             <div className="avatar">
-              <img 
-                src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} 
-                alt="Avatar" 
+              <img
+                src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
+                alt="Avatar"
               />
             </div>
             <div className="username">
@@ -78,28 +74,24 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
           </div>
         </div>
         <div className="messages">
-          {
-            userMessages.map(( msg, index ) => {
-              return (
-                  <div
-                    ref={scrollRef}
-                    key={uuidv4()}
-                    className={`message ${ msg.fromSelf ? "sender" : "receiver" }`}
-                  >
-                    <div className="content">
-                      <p>
-                        { msg.message }
-                      </p>
-                    </div>
-                  </div>
-              )
-            })
-          }
+          {userMessages.map((msg, index) => {
+            return (
+              <div
+                ref={scrollRef}
+                key={uuidv4()}
+                className={`message ${msg.fromSelf ? "sender" : "receiver"}`}
+              >
+                <div className="content">
+                  <p>{msg.message}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
         <ChatInput sendTextMessage={sendTextMessage} />
       </Container>
     </>
-  )
+  );
 }
 
 const Container = styled.div`
@@ -120,7 +112,7 @@ const Container = styled.div`
       .avatar {
         img {
           height: 2.5rem;
-          border: 2px solid #45F03C;
+          border: 2px solid #45f03c;
           border-radius: 50%;
         }
       }
@@ -132,12 +124,12 @@ const Container = styled.div`
     }
   }
   .messages {
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: .1rem;
+    gap: 0.1rem;
     overflow: auto;
-    gap: .5rem;
+    gap: 0.5rem;
     &::-webkit-scrollbar {
       width: 0.5rem;
       background-color: transparent;
@@ -159,7 +151,7 @@ const Container = styled.div`
         overflow-wrap: break-word;
         font-size: 18px;
         border-radius: 20px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
     .sender {
@@ -170,7 +162,7 @@ const Container = styled.div`
     }
     .receiver {
       align-self: flex-start;
-      background-color: #54585B;
+      background-color: #54585b;
     }
   }
 `;

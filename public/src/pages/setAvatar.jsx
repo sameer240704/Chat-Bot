@@ -1,272 +1,125 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "sonner";
 import axios from "axios";
 import Typewriter from "typewriter-effect";
-import styled from "styled-components";
 import { Buffer } from "buffer";
-import bgImage from '../assets/bgimage.jpg';
-import 'react-toastify/dist/ReactToastify.css';
 import { avatarRoute } from "../utils/APIRoutes";
-import loader from "../assets/loader.gif";
+import Loading from "../components/Loading";
 
 export default function Avatar() {
+  const api = "https://api.multiavatar.com/83983748";
+  const navigate = useNavigate();
 
-    const api = "https://api.multiavatar.com/83983748";
-    const navigate = useNavigate();
+  const [avatars, setAvatars] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedAvatar, setSelectedAvatar] = useState(undefined);
 
-    const [ avatars, setAvatars ] = useState([]);
-    const [ isLoading, setIsLoading ] = useState(true);
-    const [ selectedAvatar, setSelectedAvatar ] = useState(undefined);
-
-    const toastOptions = {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        progress: undefined,
-        theme:"dark",
+  useEffect(() => {
+    const redirect = async () => {
+      const userJSON = localStorage.getItem("snaptalk-user");
+      if (!userJSON) {
+        navigate("/login");
+      }
     };
 
-    
+    redirect();
+  }, [navigate]);
 
-    useEffect(() => {
-        const redirect = async () => {
-            const userJSON = localStorage.getItem("snaptalk-user");
-            if(!userJSON) {
-                navigate("/login");
-            }
-        };
+  const setProfilePicture = async () => {
+    if (selectedAvatar === "") {
+      toast.error("Please Select an Avatar");
+    } else {
+      try {
+        const userJSON = localStorage.getItem("snaptalk-user");
 
-        redirect();
-
-    }, [ navigate ]);
-
-    const setProfilePicture = async () => {
-        if(selectedAvatar === "") {
-            toast.error("Please Select an Avatar", toastOptions);
+        if (!userJSON) {
+          toast.error("User Not Found");
         }
-        else {
-            try {
-                const userJSON = localStorage.getItem("snaptalk-user");
 
-                if(!userJSON) {
-                    toast.error("User Not Found", toastOptions);
-                }
+        const user = await JSON.parse(userJSON);
 
-                const user = await JSON.parse(userJSON);
-                
-                const { data }  = await axios.post(`${avatarRoute}/${user._id}`, 
-                    { image: avatars[selectedAvatar] }
-                );
+        const { data } = await axios.post(`${avatarRoute}/${user._id}`, {
+          image: avatars[selectedAvatar],
+        });
 
-                if(data.isSet) {
-                    user.isAvatarImageSet = true;
-                    user.avatarImage = data.image;
-                    localStorage.setItem("snaptalk-user", JSON.stringify(user));
-                    navigate("/");
-                }
-                else {
-                    toast.error(`Error Setting Avatar. Please Try Again`, toastOptions);
-                }
-            }
-            catch(err) {
-                console.log(`Error Parsing JSON: ${err.message}`);
-            }
+        if (data.isSet) {
+          user.isAvatarImageSet = true;
+          user.avatarImage = data.image;
+          localStorage.setItem("snaptalk-user", JSON.stringify(user));
+          navigate("/");
+        } else {
+          toast.error(`Error Setting Avatar. Please Try Again`);
         }
+      } catch (err) {
+        console.log(`Error Parsing JSON: ${err.message}`);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchAvatars = async () => {
+      try {
+        const data = [];
+        for (let i = 0; i < 5; i += 1) {
+          const image = await axios.get(
+            `${api}/${Math.round(Math.random() * 1000)}`
+          );
+          const buffer = Buffer.from(image.data, "binary");
+          data.push(buffer.toString("base64"));
+        }
+        setAvatars(data);
+        setIsLoading(false);
+      } catch (err) {
+        console.log(`Fetch Avatar Error: ${err.message}`);
+        setIsLoading(false);
+      }
     };
-    
-    useEffect(() => {
-        const fetchAvatars = async () => {
-            try {
-                const data = [];
-                for (let i = 0; i < 5; i += 1) {
-                    const image = await axios.get(`${api}/${Math.round(Math.random() * 1000)}`);
-                    const buffer = Buffer.from(image.data, "binary")
-                    data.push(buffer.toString("base64"));
-                }
-                setAvatars(data);
-                setIsLoading(false);
-            }
-            catch(err) {
-                console.log(`Fetch Avatar Error: ${err.message}`);
-                setIsLoading(false);
-            }
-        }
 
-        fetchAvatars();
+    fetchAvatars();
+  }, []);
 
-    }, []);
-
-    return (
-        <>
-        {
-            isLoading ? 
-            (<Container>
-                <img src={loader} className="loader" alt="Loader" />
-            </Container> ) : (
-            <Container>
-                <div className="title">
-                    <Typewriter 
-                        options={{
-                            cursor: "",
-                        }}
-                        onInit={(typewriter) => {
-                            typewriter
-                                .typeString("WELCOME TO SNAPTALK")
-                                .pauseFor(2000)
-                                .deleteAll()
-                                .typeString("PICK AN AVATAR")
-                                .start();
-                        }}
-                    />
-                </div>
-                <div className="avatars"> {
-                    avatars.map((avatar, index) => {
-                        return (
-                            <div 
-                                key={index}
-                                className={`avatar ${ selectedAvatar === index ? "selected" : ""}`}
-                                onClick={() => setSelectedAvatar(index)}
-                            >
-                                <img 
-                                    src={`data:image/svg+xml;base64,${avatar}`} 
-                                    alt="Avatar" 
-                                />
-                            </div> 
-                        )
-                    })
-                }
-                </div>
-                <button className="submit" onClick={setProfilePicture}>
-                    <span className="circle1"></span>
-                    <span className="circle2"></span>
-                    <span className="circle3"></span>
-                    <span className="circle4"></span>
-                    <span className="circle5"></span>
-                    <span className="text">SELECT PROFILE PICTURE</span>
-                </button>
-            </Container>
-        )}
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable={false}
-                pauseOnHover
-                theme="dark"
-            />
-        </>
-    )
-};
-
-const Container = styled.div`
-    height: 100vh;
-    width: 100vw;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),
-                    url(${bgImage});
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    color: #ffffff;
-    .title {
-        font-size: 5rem;    
-        font-weight: 800;
-        color: #111111;
-        margin-bottom: 2rem;
-    }
-    .avatars {
-        display: flex;
-        gap: 3rem;
-        margin: 50px 0px 50px 0px;
-        .avatar {
-            border: 0.1rem solid transparent;
-            border-radius: 5rem;
-            padding: 0.4rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.5s ease-in-out;
-            img {
-                height: 7rem;
-            }
-        }
-        .selected {
-            box-shadow: 0 0 50px 20px #48abe0;
-        }
-    }
-    button {
-        font-weight: bold;
-        color: white;
-        background-color: #171717;
-        padding: 1em 2em;
-        border: none;
-        border-radius: .6rem;
-        margin-top: 20px;
-        padding: 15px;
-        font-size: 20px;
-        margin-bottom: 10px;
-        position: relative;
-        cursor: pointer;
-        overflow: hidden;
-    }
-      
-    button span:not(:nth-child(6)) {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        height: 76px;
-        width: 76px;
-        background-color: #0c66ed;
-        border-radius: 50%;
-        transition: .6s ease;
-    }
-      
-    button span:nth-child(6) {
-        position: relative;
-    }
-      
-    button span:nth-child(1) {
-        transform: translate(-7em, -6.3em);
-    }
-      
-    button span:nth-child(2) {
-        transform: translate(-9em, 2.5em);
-    }
-      
-    button span:nth-child(3) {
-        transform: translate(-2em, 3.5em);
-    }
-      
-    button span:nth-child(4) {
-        transform: translate(4em, 1.6em);
-    }
-      
-    button span:nth-child(5) {
-        transform: translate(3em, -6.7em);
-    }
-      
-    button:hover span:not(:nth-child(6)) {
-        transform: translate(-50%, -50%) scale(4);
-        transition: 1.5s ease;
-    }
-
-    .loader {
-        height: 50vh;
-        object-fit: contain;
-        // mix-blend-mode: color-burn;
-        index: 1;
-    }
-`;
+  return isLoading ? (
+    <Loading />
+  ) : (
+    <div className="h-screen bg-[#E6E2FE] flex flex-col justify-center items-center">
+      <div className="text-5xl font-extrabold">
+        <Typewriter
+          options={{
+            cursor: "",
+          }}
+          onInit={(typewriter) => {
+            typewriter
+              .typeString("WELCOME TO SNAPTALK")
+              .pauseFor(2000)
+              .deleteAll()
+              .typeString("PICK AN AVATAR")
+              .start();
+          }}
+        />
+      </div>
+      <div className="flex justify-center items-center gap-5 mt-10">
+        {avatars.map((avatar, index) => (
+          <div
+            key={index}
+            className={`h-48 w-48 flex ${
+              selectedAvatar === index ? "border-4 rounded- border-white" : ""
+            }`}
+            onClick={() => setSelectedAvatar(index)}
+          >
+            <img src={`data:image/svg+xml;base64,${avatar}`} alt="Avatar" />
+          </div>
+        ))}
+      </div>
+      <button
+        type="submit"
+        className="mt-8 mb-5 px-4 py-3 bg-gradient-to-r from-[#8776f3] to-[#5e48ef] rounded-xl active:scale-95"
+        onClick={setProfilePicture}
+      >
+        <span className="text-white font-bold">
+          CHOOSE YOUR DIGITAL DOPPELGANGER
+        </span>
+      </button>
+    </div>
+  );
+}
