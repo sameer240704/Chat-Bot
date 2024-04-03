@@ -151,7 +151,7 @@ export default function Register() {
 
             <button
               type="submit"
-              className="mt-7 mb-4 px-4 py-3 bg-gradient-to-r from-[#8776f3] to-[#5e48ef] rounded-xl  active:scale-95"
+              className="mt-7 mb-4 px-4 py-3 bg-gradient-to-r from-[#8776f3] to-[#5e48ef] rounded-xl shadow-sm shadow-black active:scale-95"
             >
               <span className="text-white font-bold">Sign Up</span>
             </button>

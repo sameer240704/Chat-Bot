@@ -114,7 +114,7 @@ export default function Login() {
 
             <button
               type="submit"
-              className="mt-8 mb-5 px-4 py-3 bg-gradient-to-r from-[#8776f3] to-[#5e48ef] rounded-xl  active:scale-95"
+              className="mt-8 mb-5 px-4 py-3 bg-gradient-to-r from-[#8776f3] to-[#5e48ef] rounded-xl shadow-sm shadow-black active:scale-95"
             >
               <span className="text-white font-bold">Sign In</span>
             </button>
