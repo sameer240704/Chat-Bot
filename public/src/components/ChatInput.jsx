@@ -33,12 +33,12 @@ export default function ChatInput({ sendTextMessage }) {
   };
 
   return (
-    <Container>
-      <div className="btns">
-        <div className="emoji">
+    <div className="bg-transparent grid grid-cols-2 items-center px-5 py-4 border-t-2 bg-white">
+      <div className="col-span-1 w-[5%]">
+        <div className="relative">
           <FontAwesomeIcon
             icon={faFaceSmile}
-            className="smile"
+            className="h-7 cursor-pointer text-[#e19c2b] active:scale-95"
             onClick={() => handleEmojiPicker()}
           />
           {showEmojiPicker && (
@@ -48,13 +48,15 @@ export default function ChatInput({ sendTextMessage }) {
               onEmojiClick={(event, emojiObject) =>
                 handleEmojiClick(event, emojiObject)
               }
-              theme="dark"
-              className="emoji-picker-react"
+              className="absolute -top-[420px]"
             />
           )}
         </div>
       </div>
-      <form className="input" onSubmit={(event) => sendMessage(event)}>
+      <form
+        className="col-span-1 w-[95%] h-full"
+        onSubmit={(event) => sendMessage(event)}
+      >
         <input
           type="text"
           placeholder="Type a message"
@@ -67,7 +69,7 @@ export default function ChatInput({ sendTextMessage }) {
           <FontAwesomeIcon icon={faPaperPlane} className="send" />
         </button>
       </form>
-    </Container>
+    </div>
   );
 }
 

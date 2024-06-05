@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "snaptalk-blue-100": "#7A68F1",
+      },
+    },
   },
   plugins: [],
 };

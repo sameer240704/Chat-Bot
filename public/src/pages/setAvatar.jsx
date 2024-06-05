@@ -15,7 +15,7 @@ export default function Avatar() {
   const [avatars, setAvatars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
-  const [userModal, setUserModal] = useState(false);
+  // const [userModal, setUserModal] = useState(false);
 
   useEffect(() => {
     const redirect = async () => {
@@ -81,10 +81,10 @@ export default function Avatar() {
     fetchAvatars();
   }, []);
 
-  const generateUserModal = (event) => {
-    event.preventDefault();
-    setUserModal(!userModal);
-  };
+  // const generateUserModal = (event) => {
+  //   event.preventDefault();
+  //   setUserModal(!userModal);
+  // };
 
   return isLoading ? (
     <Loading />
@@ -129,13 +129,6 @@ export default function Avatar() {
           <span className="text-white font-bold">
             CHOOSE YOUR DIGITAL DOPPELGANGER
           </span>
-        </button>
-        <button
-          type="submit"
-          className="mb-5 px-4 py-3 text-white font-bold uppercase bg-gradient-to-r from-[#8776f3] to-[#5e48ef] rounded-xl shadow-md shadow-black active:scale-95"
-          onClick={generateUserModal}
-        >
-          Generate a User Id
         </button>
       </div>
       {userModal ? <Modal /> : null}
